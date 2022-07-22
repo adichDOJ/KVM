@@ -1,0 +1,92 @@
+<domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm">
+    <uuid>08e21582-098f-11ed-ad64-31bccc42001d</uuid>
+    <name>ljt_5</name>
+    <memory unit="MiB">1024</memory>
+    <currentMemory unit="MiB">1024</currentMemory>
+    <vcpu placement="static">1</vcpu>
+    <resource>
+        <partition>/machine</partition>
+    </resource>
+    <os>
+        <type arch="x86_64" machine="pc-i440fx-2.5">hvm</type>
+        <smbios mode="sysinfo" />
+        <loader>/opt/pool/user_data//ljt_5/OVMF-pure-efi.fd</loader>
+        <nvram>/opt/pool/user_data//ljt_5/OVMF-pure-efi.fd</nvram>
+        <boot dev="hd" />
+    </os>
+    <features>
+        <acpi />
+        <apic />
+        <kvm>
+            <hidden state="on" />
+        </kvm>
+        <pae />
+    </features>
+    <cpu mode="custom" match="exact" check="none">
+        <model fallback="allow" />
+        <topology sockets="1" cores="1" threads="1" />
+    </cpu>
+    <clock offset="localtime">
+        <timer name="rtc" tickpolicy="catchup" track="guest" />
+        <timer name="pit" tickpolicy="delay" />
+        <timer name="hpet" present="no" />
+    </clock>
+    <on_poweroff>destroy</on_poweroff>
+    <on_reboot>restart</on_reboot>
+    <on_crash>destroy</on_crash>
+    <pm>
+        <suspend-to-mem enabled="no" />
+        <suspend-to-disk enabled="yes" />
+    </pm>
+    <devices>
+        <emulator>/usr/bin/qemu-system-x86_64</emulator>
+        <disk type="file" device="disk">
+            <driver name="qemu" type="qcow2" cache="writeback" discard="unmap" copy_on_read="off" />
+            <source file="/opt/pool/user_data//ljt_5/ljt_5.qcow2" />
+            <target dev="sda" bus="scsi" />
+            <serial>QM001</serial>
+        </disk>
+        <input type="mouse" bus="ps2" />
+        <input type="keyboard" bus="ps2" />
+        <controller type="pci" index="0" model="pci-root">
+            <alias name="pci.0" />
+        </controller>
+        <interface type="bridge">
+            <mac address="52:7f:09:37:a5:4f" />
+            <source bridge="nm-bridge" />
+            <model type="virtio" />
+            <address type="pci" domain="0x0000" bus="0x00" slot="0x03" function="0x0" />
+        </interface>
+        <graphics type="spice" port="5932" autoport="yes" listen="0.0.0.0">
+            <listen type="address" address="0.0.0.0" />
+        </graphics>
+        <video>
+            <model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes">
+                <acceleration accel2d="no" />
+            </model>
+            <address type="pci" domain="0x0000" bus="0x00" slot="0x02" function="0x0" />
+        </video>
+        <memballoon model="none" />
+    </devices>
+    <sysinfo type="smbios">
+        <system>
+            <entry name="manufacturer">Ruijie</entry>
+            <entry name="product">RG-CT6200</entry>
+            <entry name="version">V1.10</entry>
+            <entry name="serial">G1PD23S000000</entry>
+        </system>
+        <baseBoard>
+            <entry name="manufacturer">Ruijie</entry>
+            <entry name="product">80061600</entry>
+            <entry name="version" />
+            <entry name="serial" />
+        </baseBoard>
+    </sysinfo>
+    <seclabel type="none" />
+    <qemu:commandline>
+        <qemu:arg value="-cpu" />
+        <qemu:arg value="SandyBridge,+vmx,model_id=Intel(R) Pentium(R) Gold G6400 CPU @ 4.00GHz" />
+        <qemu:arg value="-smbios" />
+        <qemu:arg value="type=11,value={PLAT:IDV;VERREQ:0;CPU:G5400;MEM:12/4;USB:2/6;SSD:120;EMMC:0;HDD:0;FAN:51-1600/255-2700;VGA:0;HDMI:1;LCD:1920x1080;BRT:0;CAM:0;BRP:1}" />
+    </qemu:commandline>
+</domain>
